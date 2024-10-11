@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="style.css" rel="stylesheet">
+    <title>luffyhub</title>
+</head>
+<body>
+    <div class="header">
+        <h1 class="N">LUFFY</h1><h1 class="H">HUB</h1>
+    </div>
+    <p class="intro-text">Here You Will Find Nothing. But Sometime I Might Upload Some Crazy Things And Premium Accounts Of Crunchyroll And Bla Bla Bla...</p>
+    
+    <div class="videos">
+        <h3>Hot Videos:</h3>
+        
+        <div class="video-container">
+            <iframe class="video-frame" src="https://go.screenpal.com/player/cZ6XfBVWOyJ?ff=1" allowfullscreen="true"></iframe>
+            <p class="part1">Exclusive Hot Video | Premium Gold Exclusive Part 01</p> 
+        </div>
+        <br>
+        <div class="video-container">
+            <iframe class="video-frame" src="https://go.screenpal.com/player/cZ6XfBVWOyd?ff=1" allowfullscreen="true"></iframe>
+            <p class="part2">Exclusive Hot Video | Premium Gold Exclusive Part 02 | Final</p>
+        </div>
+    </div>
+
+    <!-- Email:Pass Generator Section -->
+    <div class="generator-section">
+        <h3>Get Your Premium Account:</h3>
+        <input type="text" id="emailPass" placeholder="[email:pass]" readonly>
+        <button id="generateButton">Generate</button>
+    </div>
+
+    <script>
+        let accounts = [];
+
+        // Fetch accounts from PHP
+        function fetchAccounts() {
+            fetch('getAccounts.php')
+                .then(response => response.json())
+                .then(data => {
+                    accounts = data;
+                })
+                .catch(error => console.error('Error fetching accounts:', error));
+        }
+
+        // Call the function to fetch accounts
+        fetchAccounts();
+
+        // Generate random email:pass on button click
+        document.getElementById('generateButton').addEventListener('click', function() {
+            if (accounts.length > 0) {
+                const randomIndex = Math.floor(Math.random() * accounts.length);
+                document.getElementById('emailPass').value = accounts[randomIndex];
+            } else {
+                alert("No accounts available.");
+            }
+        });
+    </script>
+</body>
+</html>
