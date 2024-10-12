@@ -30,23 +30,57 @@
         <h3>Generate Crunchyroll Account</h3>
         <input type="text" id="accountBox" readonly placeholder="Your generated email:password will appear here">
         <button onclick="fetchAccounts()">Generate</button>
+        <button onclick="checkAccountValidity()">Check Validity</button>
+        <p id="validityMessage"></p>
     </div>
 
     <script>
+    let currentAccount = '';
+
     function fetchAccounts() {
         fetch('accounts.json')
-        .then(response => response.json())  // Parse the JSON response
+        .then(response => response.json())
         .then(data => {
             const accounts = data.accounts;
             if (accounts.length > 0) {
                 // Select a random account from the list
-                const randomAccount = accounts[Math.floor(Math.random() * accounts.length)];
-                document.getElementById("accountBox").value = randomAccount;
+                currentAccount = accounts[Math.floor(Math.random() * accounts.length)];
+                document.getElementById("accountBox").value = currentAccount;
+                document.getElementById("validityMessage").innerText = ''; // Clear previous validity message
             } else {
                 document.getElementById("accountBox").value = "No accounts available";
             }
         })
         .catch(error => console.error('Error fetching accounts:', error));
+    }
+
+    async function checkAccountValidity() {
+        if (!currentAccount) {
+            alert('Please generate an account first!');
+            return;
+        }
+
+        const [email, password] = currentAccount.split(':');
+        
+        try {
+            const response = await fetch('https://example.com/api/login', { // Replace with the actual login URL
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ email, password })
+            });
+
+            const data = await response.json();
+            if (data.success) { // Assume the API returns { success: true/false }
+                document.getElementById("validityMessage").innerText = 'Account is valid.';
+            } else {
+                document.getElementById("validityMessage").innerText = 'Account is invalid.';
+            }
+        } catch (error) {
+            console.error('Error checking account validity:', error);
+            document.getElementById("validityMessage").innerText = 'Error checking validity. Please try again.';
+        }
     }
     </script>
 </body>
